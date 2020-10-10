@@ -1,0 +1,17 @@
+luma.core>=1.17.1
+luma.emulator>=1.3.0
+luma.oled>=3.6.0
+luma.lcd>=2.5.0
+luma.led_matrix>=1.5.0
+argcomplete
+
+[docs]
+sphinx>=1.5.1
+
+[qa]
+rstcheck
+flake8
+
+[test]
+pytest>=3.1
+pytest-cov
