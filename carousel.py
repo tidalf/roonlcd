@@ -16,6 +16,7 @@ Needs psutil (+ dependencies) installed::
 """
 
 import psutil
+import roonapi
 
 from demo_opts import get_device
 from luma.core.virtual import viewport, snapshot
@@ -27,6 +28,16 @@ import os.path
 from demo_opts import get_device
 from luma.core.virtual import viewport
 from PIL import Image
+
+appinfo = {
+        "extension_id": "roon_oled_info",
+        "display_name": "Python library oled info for Roon",
+        "display_version": "1.0.0",
+        "publisher": "tidalf",
+        "email": "tidalf@ematome.com"
+    }
+
+
 
 
 def scroll_down(virtual, pos):
@@ -143,13 +154,22 @@ def main():
         widget_width = device.width
         widget_height = device.height // 2
 
+
+    token = open('/opt/roonlcd/mytokenfile').read()
+    roonapid = roonapi.RoonApi(appinfo, token)
+    # save the token for next time
+    with open('/opt/roonlcd/mytokenfile', 'w') as f:
+      f.write(roonapid.token)# save the token for next time
+
     # Either function or subclass
     #  cpuload = hotspot(widget_width, widget_height, cpu_load.render)
     #  cpuload = cpu_load.CPU_Load(widget_width, widget_height, interval=1.0)
     utime = snapshot(widget_width, widget_height, uptime.render, interval=1.0)
     mem = snapshot(widget_width, widget_height, memory.render, interval=2.0)
     dsk = snapshot(widget_width, widget_height, disk.render, interval=2.0)
-    msc = snapshot(widget_width, widget_height, music.render, interval=2.0)
+    msc = snapshot(widget_width, widget_height, music.get_data(roonapid, "evo"), interval=2.0)
+    msch = snapshot(widget_width, widget_height, music.get_data(roonapid, "Homepod"), interval=2.0)
+    msca = snapshot(widget_width, widget_height, music.get_data(roonapid, "apple tv"), interval=2.0)
     cpuload = snapshot(widget_width, widget_height, cpu_load.render, interval=0.5)
     clk = snapshot(widget_width, widget_height, clock.render, interval=1.0)
 
@@ -162,7 +182,8 @@ def main():
     net_eth = snapshot(widget_width, widget_height, network.stats(eth), interval=2.0)
     net_lo = snapshot(widget_width, widget_height, network.stats(lo), interval=2.0)
 
-    widgets = [cpuload, msc, net_eth, msc, mem, msc, dsk, msc]
+    widgets = [ msca, msc, msch]
+    # widgets = [cpuload, msc, net_eth, msc, mem, msc, dsk, msc]
 
     if device.rotate in (0, 2):
         virtual = viewport(device, width=widget_width * len(widgets), height=widget_height)
