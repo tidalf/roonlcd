@@ -34,16 +34,13 @@ appinfo = {
 def get_data(roonapid, dac_zone): 
 
   def render(draw, width, height):
-      # dac_zone='160155895af4376afe74c12da20fdadfc027'
-      # dac_zone=0
       margin = 3
       playing = ''
       playing2 = ''
       current = 0
       length = 0
       state = roonapid.zones[dac_zone]['state']
-      #import pprint
-      #pprint.pprint(roonapid.zones[dac_zone])
+
       title_text(draw, margin, width, "%s - %s" % (roonapid.zones[dac_zone]['display_name'], state) )
       if "now_playing" in roonapid.zones[dac_zone]:
         playing=roonapid.zones[dac_zone]['now_playing']['two_line']['line1']

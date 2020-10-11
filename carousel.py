@@ -170,7 +170,7 @@ def main():
     zoneid=0
     widgets=[]
     for zone in roonapid.zones:
-        widgets.append(snapshot(widget_width, widget_height, music.get_data(roonapid, zone), interval=2.0))
+        widgets.append(snapshot(widget_width, widget_height, music.get_data(roonapid, zone), interval=1.0))
         
     # shair = snapshot(widget_width, widget_height, shairplay.render, interval=2.0)
     # cpuload = snapshot(widget_width, widget_height, cpu_load.render, interval=0.5)
@@ -208,6 +208,6 @@ if __name__ == "__main__":
     try:
         device = get_device()
         # images()
-        main()
+        1smain()
     except KeyboardInterrupt:
         pass
