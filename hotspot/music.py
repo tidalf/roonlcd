@@ -48,9 +48,9 @@ def get_data(roonapid, dac_zone):
         length=roonapid.zones[dac_zone]['now_playing']['length']
         if state == "playing" and 'seek_position' in roonapid.zones[dac_zone]:
           current=roonapid.zones[dac_zone]['seek_position']
-          draw.text( (margin, 50), text="%s / %s" % (str(datetime.timedelta(seconds=current)), str(datetime.timedelta(seconds=length)) ) )
         elif "seek_position" in roonapid.zones[dac_zone]['now_playing']:
           current=roonapid.zones[dac_zone]['now_playing']['seek_position']
+        if current:
           draw.text( (margin, 50), text="%s / %s" % (str(datetime.timedelta(seconds=current)), str(datetime.timedelta(seconds=length)) ) )
       draw.text( (margin, 20), text=playing, font=tiny_font)
       draw.text( (margin, 35), text=playing2, font=tiny_font)
