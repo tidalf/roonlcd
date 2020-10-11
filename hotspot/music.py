@@ -42,16 +42,19 @@ def get_data(roonapid, dac_zone):
       current = 0
       length = 0
       state = roonapid.zones[dac_zone]['state']
-      # import pprint
-      # pprint.pprint(roonapid.zones[dac_zone])
+      #import pprint
+      #pprint.pprint(roonapid.zones[dac_zone])
+      title_text(draw, margin, width, "%s - %s" % (roonapid.zones[dac_zone]['display_name'], state) )
       if "now_playing" in roonapid.zones[dac_zone]:
         playing=roonapid.zones[dac_zone]['now_playing']['two_line']['line1']
         playing2=roonapid.zones[dac_zone]['now_playing']['two_line']['line2']
         length=roonapid.zones[dac_zone]['now_playing']['length']
-      if "seek_position" in roonapid.zones[dac_zone]:
-        current=roonapid.zones[dac_zone]['seek_position']
-      title_text(draw, margin, width, "%s - %s" % (roonapid.zones[dac_zone]['display_name'], state) )
+        if state == "playing":
+          current=roonapid.zones[dac_zone]['seek_position']
+        elif "seek_position" in roonapid.zones[dac_zone]['now_playing']:
+          current=roonapid.zones[dac_zone]['now_playing']['seek_position']
+        draw.text( (margin, 50), text="%s / %s" % (str(datetime.timedelta(seconds=current)), str(datetime.timedelta(seconds=length)) ) )
       draw.text( (margin, 20), text=playing, font=tiny_font)
       draw.text( (margin, 35), text=playing2, font=tiny_font)
-      draw.text( (margin, 50), text="%s / %s" % (str(datetime.timedelta(seconds=current)), str(datetime.timedelta(seconds=length)) ) )
+
   return render
