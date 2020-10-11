@@ -208,6 +208,6 @@ if __name__ == "__main__":
     try:
         device = get_device()
         # images()
-        1smain()
+        main()
     except KeyboardInterrupt:
         pass
