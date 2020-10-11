@@ -155,10 +155,10 @@ def main():
         widget_height = device.height // 2
 
 
-    token = open('/opt/roonlcd/mytokenfile').read()
+    token = open('mytokenfile').read()
     roonapid = roonapi.RoonApi(appinfo, token)
     # save the token for next time
-    with open('/opt/roonlcd/mytokenfile', 'w') as f:
+    with open('mytokenfile', 'w') as f:
       f.write(roonapid.token)# save the token for next time
 
     # Either function or subclass
