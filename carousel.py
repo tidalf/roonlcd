@@ -21,7 +21,7 @@ import roonapi
 from demo_opts import get_device
 from luma.core.virtual import viewport, snapshot
 
-from hotspot import memory, uptime, cpu_load, clock, network, disk, music
+from hotspot import memory, uptime, cpu_load, clock, network, disk, music # , shairplay
 import time
 import random
 import os.path
@@ -164,25 +164,27 @@ def main():
     # Either function or subclass
     #  cpuload = hotspot(widget_width, widget_height, cpu_load.render)
     #  cpuload = cpu_load.CPU_Load(widget_width, widget_height, interval=1.0)
-    utime = snapshot(widget_width, widget_height, uptime.render, interval=1.0)
-    mem = snapshot(widget_width, widget_height, memory.render, interval=2.0)
-    dsk = snapshot(widget_width, widget_height, disk.render, interval=2.0)
-    msc = snapshot(widget_width, widget_height, music.get_data(roonapid, "evo"), interval=2.0)
-    msch = snapshot(widget_width, widget_height, music.get_data(roonapid, "Homepod"), interval=2.0)
-    msca = snapshot(widget_width, widget_height, music.get_data(roonapid, "apple tv"), interval=2.0)
-    cpuload = snapshot(widget_width, widget_height, cpu_load.render, interval=0.5)
-    clk = snapshot(widget_width, widget_height, clock.render, interval=1.0)
+    # utime = snapshot(widget_width, widget_height, uptime.render, interval=1.0)
+    # mem = snapshot(widget_width, widget_height, memory.render, interval=2.0)
+    # dsk = snapshot(widget_width, widget_height, disk.render, interval=2.0)
+    zoneid=0
+    widgets=[]
+    for zone in roonapid.zones:
+        widgets.append(snapshot(widget_width, widget_height, music.get_data(roonapid, zone), interval=2.0))
+        
+    # shair = snapshot(widget_width, widget_height, shairplay.render, interval=2.0)
+    # cpuload = snapshot(widget_width, widget_height, cpu_load.render, interval=0.5)
+    # clk = snapshot(widget_width, widget_height, clock.render, interval=1.0)
 
-    network_ifs = psutil.net_if_stats().keys()
-    wlan = first(intersect(network_ifs, ["wlan0", "wl0"]), "wlan0")
-    eth = first(intersect(network_ifs, ["eth0", "en0"]), "eth0")
-    lo = first(intersect(network_ifs, ["lo", "lo0"]), "lo")
+    # network_ifs = psutil.net_if_stats().keys()
+    # wlan = first(intersect(network_ifs, ["wlan0", "wl0"]), "wlan0")
+    # eth = first(intersect(network_ifs, ["eth0", "en0"]), "eth0")
+    # lo = first(intersect(network_ifs, ["lo", "lo0"]), "lo")
 
-    net_wlan = snapshot(widget_width, widget_height, network.stats(wlan), interval=2.0)
-    net_eth = snapshot(widget_width, widget_height, network.stats(eth), interval=2.0)
-    net_lo = snapshot(widget_width, widget_height, network.stats(lo), interval=2.0)
+    # net_wlan = snapshot(widget_width, widget_height, network.stats(wlan), interval=2.0)
+    # net_eth = snapshot(widget_width, widget_height, network.stats(eth), interval=2.0)
+    # net_lo = snapshot(widget_width, widget_height, network.stats(lo), interval=2.0)
 
-    widgets = [ msca, msc, msch]
     # widgets = [cpuload, msc, net_eth, msc, mem, msc, dsk, msc]
 
     if device.rotate in (0, 2):
