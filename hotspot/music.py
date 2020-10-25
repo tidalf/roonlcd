@@ -45,7 +45,8 @@ def get_data(roonapid, dac_zone):
           if "now_playing" in roonapid.zones[dac_zone]:
             playing=roonapid.zones[dac_zone]['now_playing']['two_line']['line1']
             playing2=roonapid.zones[dac_zone]['now_playing']['two_line']['line2']
-            length=roonapid.zones[dac_zone]['now_playing']['length']
+            if "length" in roonapid.zones[dac_zone]['now_playing']:
+              length=roonapid.zones[dac_zone]['now_playing']['length']
             if state == "playing" and 'seek_position' in roonapid.zones[dac_zone]:
               current=roonapid.zones[dac_zone]['seek_position']
             elif "seek_position" in roonapid.zones[dac_zone]['now_playing']:
