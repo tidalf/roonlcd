@@ -21,16 +21,20 @@ appinfo = {
         "publisher": "tidalf",
         "email": "tidalf@ematome.com"
     }
-    
+  
 
-# get all outputs (as dict)
-# print(json.dumps(roonapid.outputs))
+def get_playing(roonapid):
+  idx = 0
+  found = 0
+  for zone in roonapid.zones:
+    if 'state' in roonapid.zones[zone]:
+      state = roonapid.zones[zone]['state']
+      if state == "playing" and 'seek_position' in roonapid.zones[zone]:
+         found = idx
+         return found
+    idx = idx + 1
+  return -1
 
-# receive state updates in your callback
-# roonapid.register_state_callback(state_callback)
-
-
-# time.sleep(100)
 def get_data(roonapid, dac_zone): 
 
   def render(draw, width, height):

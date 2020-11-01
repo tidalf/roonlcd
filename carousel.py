@@ -145,14 +145,15 @@ def first(iterable, default=None):
 
 
 def main():
+    last_seen = 0
     if device.rotate in (0, 2):
         # Horizontal
-        widget_width = device.width // 2
+        widget_width = device.width # // 2
         widget_height = device.height
     else:
         # Vertical
         widget_width = device.width
-        widget_height = device.height // 2
+        widget_height = device.height # // 2
 
 
     token = open('mytokenfile').read()
@@ -170,8 +171,8 @@ def main():
     zoneid=0
     widgets=[]
     for zone in roonapid.zones:
-        widgets.append(snapshot(widget_width, widget_height, music.get_data(roonapid, zone), interval=1.0))
-        
+          widgets.append(snapshot(widget_width, widget_height, music.get_data(roonapid, zone), interval=1.0))
+
     # shair = snapshot(widget_width, widget_height, shairplay.render, interval=2.0)
     # cpuload = snapshot(widget_width, widget_height, cpu_load.render, interval=0.5)
     # clk = snapshot(widget_width, widget_height, clock.render, interval=1.0)
@@ -186,15 +187,20 @@ def main():
     # net_lo = snapshot(widget_width, widget_height, network.stats(lo), interval=2.0)
 
     # widgets = [cpuload, msc, net_eth, msc, mem, msc, dsk, msc]
-
+    # if len(widgets) > 2:
     if device.rotate in (0, 2):
         virtual = viewport(device, width=widget_width * len(widgets), height=widget_height)
         for i, widget in enumerate(widgets):
             virtual.add_hotspot(widget, (i * widget_width, 0))
 
         for x in pause_every(widget_width, position(widget_width * (len(widgets) - 2))):
-            virtual.set_position((x, 0))
-
+            # virtual.set_position((x, 0))
+            playing=music.get_playing(roonapid) 
+            if playing != -1:
+               virtual.set_position(((music.get_playing(roonapid)) * widget_width, 0))
+               last_seen=playing
+            else:
+               virtual.set_position((last_seen * widget_width, 0))
     else:
         virtual = viewport(device, width=widget_width, height=widget_height * len(widgets))
         for i, widget in enumerate(widgets):
