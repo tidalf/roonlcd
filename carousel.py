@@ -197,7 +197,7 @@ def main():
             # virtual.set_position((x, 0))
             playing=music.get_playing(roonapid) 
             if playing != -1:
-               virtual.set_position(((music.get_playing(roonapid)) * widget_width, 0))
+               virtual.set_position((playing * widget_width, 0))
                last_seen=playing
             else:
                virtual.set_position((last_seen * widget_width, 0))
