@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args":["--display", "ssd1322","--interface","spi","--gpio-reset", "24", "--gpio-data-command", "27", "--width", "256", "--height", "64"],
+            "args":["--display", "pygame","--interface","spi","--gpio-reset", "24", "--gpio-data-command", "27", "--width", "256", "--height", "64"],
         }
     ]
 }

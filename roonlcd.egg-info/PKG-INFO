@@ -294,6 +294,6 @@ Classifier: Programming Language :: Python :: 3.5
 Classifier: Programming Language :: Python :: 3.6
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
-Provides-Extra: qa
 Provides-Extra: docs
+Provides-Extra: qa
 Provides-Extra: test
