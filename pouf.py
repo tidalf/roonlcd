@@ -31,6 +31,25 @@ def title_text(draw, y, width, text):
     x = (width - draw.textsize(text)[0]) / 2
     draw.text((x, y), text=text, fill="yellow")
 
+def get_playing(roonapid):
+    found_zone = False
+    for zone in roonapid.zones:
+        if 'state' in roonapid.zones[zone]:
+            state = roonapid.zones[zone]['state']
+        if state == "playing" and 'seek_position' in roonapid.zones[zone]:
+            found_zone = zone
+            last_zone = zone
+    return found_zone
+
+def get_api():
+  token_file = '.roon_token'
+  host = "192.168.33.30"  # set host if it picks the wrong one.
+  token = open(token_file).read()
+  roonapid = roonapi.RoonApi(appinfo, token, host=host)
+  # save the token for next time
+  with open(token_file, 'w') as f:
+      f.write(roonapid.token)  # save the token for next time
+  return roonapid
 
 def main():
     image = None
@@ -41,36 +60,15 @@ def main():
     playing = ''
     playing2 = ''
     old_image_url = ''
-    size = [min(*device.size)] * 2
-    token_file = '.roon_token'
-    host = "192.168.33.30"  # set host if it picks the wrong one.
-    token = open(token_file).read()
-    roonapid = roonapi.RoonApi(appinfo, token, host=host)
-    # save the token for next time
-    with open(token_file, 'w') as f:
-        f.write(roonapid.token)  # save the token for next time
     last_zone = ''
+    roonapid=get_api()
+    
     background = Image.new("RGB", device.size, "black")
-
     while True:
-
-        found_zone = False
-        for zone in roonapid.zones:
-            if 'state' in roonapid.zones[zone]:
-                state = roonapid.zones[zone]['state']
-            if state == "playing" and 'seek_position' in roonapid.zones[zone]:
-                found_zone = zone
-                last_zone = zone
-
-        if not found_zone:
-            if last_zone:
-                found_zone = last_zone
-            else:
-                found_Zone = next(iter(roonapid.zones.values()))
+        found_zone = get_playing(roonapid)
 
         if found_zone:
-            zone_id = found_zone['zone_id'] if isinstance(
-                found_zone, dict) else found_zone
+            zone_id = found_zone['zone_id'] if isinstance(found_zone, dict) else found_zone
             zone = roonapid.zones[zone_id]
 
         if 'state' in zone:
@@ -82,12 +80,12 @@ def main():
                 playing2 = now['two_line']['line2']
 
                 if "image_key" in now:
-                    image_url = roonapid.get_image(now['image_key']).replace(
-                        '=500', '=%s' % device.height, 1)
+                    image_url = roonapid.get_image(now['image_key']).replace('=500', '=%s' % device.height, 1)
                     if image_url != old_image_url:
                         image = Image.open(requests.get(
                             image_url, stream=True).raw)
                         old_image_url = image_url
+                    size = [min(*device.size)] * 2
                     background = Image.new("RGB", device.size, "black")
                     background.paste(image.resize(
                         size, resample=Image.LANCZOS), (device.width - device.height, 0))
