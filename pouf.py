@@ -11,12 +11,11 @@ Displays an animated gif.
 from pathlib import Path
 from demo_opts import get_device
 from PIL import Image, ImageSequence, ImageDraw, ImageFont
-from luma.core.sprite_system import framerate_regulator
+# from luma.core.sprite_system import framerate_regulator
 import roonapi
 import time
 import requests
 import datetime
-from hotspot.common import tiny_font
 import os.path
 
 appinfo = {
