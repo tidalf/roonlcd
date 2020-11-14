@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020 Tid
+# Copyright (c) 2017-2020 Richard Hull and contributors
 # See LICENSE.rst for details.
 # PYTHON_ARGCOMPLETE_OK
 
 """
-Displays track infos from Roon api on a 256x64 oled screen
+Displays an animated gif.
 """
 
 from pathlib import Path
@@ -85,10 +85,10 @@ def main():
         if not "state" in zone:
             image = Image.new("RGB", device.size, "black")
         elif "now_playing" in zone:
-            now = zone["now_playing"]
+            track = zone["now_playing"]
 
-            if "image_key" in now:
-                image_url = roonapid.get_image(now["image_key"]).replace(
+            if "image_key" in track:
+                image_url = roonapid.get_image(track["image_key"]).replace(
                     "=500", "=%s" % device.height, 1
                 )
                 if image_url != old_image_url:
@@ -101,16 +101,16 @@ def main():
                     (device.width - device.height, 0),
                 )
 
-            if "length" in now:
-                length = now["length"]
+            if "length" in track:
+                length = track["length"]
 
             if zone["state"] == "playing" and "seek_position" in zone:
                 current = zone["seek_position"]
-            elif "seek_position" in now:
-                current = now["seek_position"]
+            elif "seek_position" in track:
+                current = track["seek_position"]
             
-            playing = now["two_line"]["line1"]
-            playing2 = now["two_line"]["line2"]
+            playing = track["two_line"]["line1"]
+            playing2 = track["two_line"]["line2"]
 
         # we draw after the cover rendering
         draw = ImageDraw.Draw(background)
