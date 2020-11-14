@@ -70,21 +70,24 @@ def main():
     roonapid = get_api()
     zone = ""
     icon_size = 64
+    rect_left_offset = 94
+    rect_top_offset = 50
+    w, h = device.width, device.height
+    rect_progress_bottom_right = (w - (icon_size + margin), h - (margin + 2))
     black = Image.new("RGB", device.size, "black")
     background = Image.new("RGB", device.size, "black")
+
+
     while True:
         found_zone = get_playing(roonapid)
+        background.paste(black)
         if found_zone:
             zone_id = (
                 found_zone["zone_id"] if isinstance(found_zone, dict) else found_zone
             )
             zone = roonapid.zones[zone_id]
 
-        if not "state" in zone:
-            background.paste(black)
-        elif not "now_playing" in zone:
-            background.paste(black)
-        else:
+        if "state" in zone and "now_playing" in zone:
             track = zone["now_playing"]
 
             if "image_key" in track:
@@ -95,7 +98,6 @@ def main():
                     image = Image.open(requests.get(image_url, stream=True).raw)
                     old_image_url = image_url
                 size = [min(*device.size)] * 2
-                background.paste(black)
                 background.paste(
                     image.resize(size, resample=Image.LANCZOS),
                     (device.width - device.height, 0),
@@ -123,9 +125,6 @@ def main():
             draw.text((margin, 35), text=playing2, font=tiny_font)
 
         if current: 
-            w, h = device.width, device.height
-            rect_left_offset = 94
-            rect_top_offset = 50
             draw.text(
                 (margin, 50),
                 font=tiny_font,
@@ -140,7 +139,7 @@ def main():
             draw.rectangle(
                 [
                     (rect_left_offset, rect_top_offset),          # x,y top left
-                    (w - (icon_size + margin), h - (margin + 2)),  # x,y bottom right
+                    (rect_progress_bottom_right),  # x,y bottom right
                 ]
             )
             progress_pct = (current * 100 / length) / 100
