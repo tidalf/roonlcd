@@ -71,10 +71,9 @@ def main():
     zone = ""
     icon_size = 64
     black = Image.new("RGB", device.size, "black")
-    background = black
+    background = Image.new("RGB", device.size, "black")
     while True:
         found_zone = get_playing(roonapid)
-        black = Image.new("RGB", device.size, "black")
         if found_zone:
             zone_id = (
                 found_zone["zone_id"] if isinstance(found_zone, dict) else found_zone
@@ -82,10 +81,9 @@ def main():
             zone = roonapid.zones[zone_id]
 
         if not "state" in zone:
-            image = black
-            background = black
+            background.paste(black)
         elif not "now_playing" in zone:
-            image = black
+            background.paste(black)
         else:
             track = zone["now_playing"]
 
@@ -97,7 +95,7 @@ def main():
                     image = Image.open(requests.get(image_url, stream=True).raw)
                     old_image_url = image_url
                 size = [min(*device.size)] * 2
-                background = black
+                background.paste(black)
                 background.paste(
                     image.resize(size, resample=Image.LANCZOS),
                     (device.width - device.height, 0),
@@ -126,7 +124,7 @@ def main():
 
         if current: 
             w, h = device.width, device.height
-            rect_right_offset = 94
+            rect_left_offset = 94
             rect_top_offset = 50
             draw.text(
                 (margin, 50),
@@ -141,16 +139,16 @@ def main():
             # progressbar
             draw.rectangle(
                 [
-                    (rect_right_offset, rect_top_offset),          # x,y topright
-                    (w - (icon_size + margin), h - (margin + 2)),  # x,y bottom left
+                    (rect_left_offset, rect_top_offset),          # x,y top left
+                    (w - (icon_size + margin), h - (margin + 2)),  # x,y bottom right
                 ]
             )
             progress_pct = (current * 100 / length) / 100
-            rectangle_width = w - (icon_size + margin) - rect_right_offset 
-            progress_width = rect_right_offset + ((rectangle_width) * (progress_pct))
+            rectangle_width = w - (icon_size + margin) - rect_left_offset 
+            progress_width = rect_left_offset + ((rectangle_width) * (progress_pct))
             draw.rectangle(
                 [
-                    (rect_right_offset, rect_top_offset),
+                    (rect_left_offset, rect_top_offset),
                     (progress_width, h - (margin + 2)),
                 ],
                 fill="#ffffff",
