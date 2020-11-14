@@ -72,8 +72,7 @@ def main():
     icon_size = 64
     rect_left_offset = 94
     rect_top_offset = 50
-    w, h = device.width, device.height
-    rect_progress_bottom_right = (w - (icon_size + margin), h - (margin + 2))
+    rect_progress_bottom_right = (device.width - (icon_size + margin), device.height - (margin + 2))
     black = Image.new("RGB", device.size, "black")
     background = Image.new("RGB", device.size, "black")
 
@@ -143,12 +142,12 @@ def main():
                 ]
             )
             progress_pct = (current * 100 / length) / 100
-            rectangle_width = w - (icon_size + margin) - rect_left_offset 
+            rectangle_width = device.width - (icon_size + margin) - rect_left_offset 
             progress_width = rect_left_offset + ((rectangle_width) * (progress_pct))
             draw.rectangle(
                 [
                     (rect_left_offset, rect_top_offset),
-                    (progress_width, h - (margin + 2)),
+                    (progress_width, device.height - (margin + 2)),
                 ],
                 fill="#ffffff",
             )
