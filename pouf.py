@@ -70,11 +70,11 @@ def main():
     roonapid = get_api()
     zone = ""
     icon_size = 64
-
-    background = Image.new("RGB", device.size, "black")
+    black = Image.new("RGB", device.size, "black")
+    background = black
     while True:
         found_zone = get_playing(roonapid)
-
+        black = Image.new("RGB", device.size, "black")
         if found_zone:
             zone_id = (
                 found_zone["zone_id"] if isinstance(found_zone, dict) else found_zone
@@ -82,8 +82,11 @@ def main():
             zone = roonapid.zones[zone_id]
 
         if not "state" in zone:
-            image = Image.new("RGB", device.size, "black")
-        elif "now_playing" in zone:
+            image = black
+            background = black
+        elif not "now_playing" in zone:
+            image = black
+        else:
             track = zone["now_playing"]
 
             if "image_key" in track:
@@ -94,7 +97,7 @@ def main():
                     image = Image.open(requests.get(image_url, stream=True).raw)
                     old_image_url = image_url
                 size = [min(*device.size)] * 2
-                background = Image.new("RGB", device.size, "black")
+                background = black
                 background.paste(
                     image.resize(size, resample=Image.LANCZOS),
                     (device.width - device.height, 0),
