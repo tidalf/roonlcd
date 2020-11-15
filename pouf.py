@@ -72,8 +72,10 @@ def main():
     icon_size = 64
     time_width = 38
     rect_left_offset = time_width + margin
-    rect_top_offset = 50
-    rect_progress_bottom_right = (device.width - (icon_size + margin + time_width), device.height - (margin + 2))
+    offset_rect = 2
+    rect_top_offset = 50 + offset_rect
+    rect_bottom_right = device.height - (margin + 4)
+    rect_progress_bottom_right = (device.width - (icon_size + margin + time_width), rect_bottom_right)
     black = Image.new("RGB", device.size, "black")
     background = Image.new("RGB", device.size, "black")
 
@@ -145,7 +147,14 @@ def main():
             draw.rectangle(
                 [
                     (rect_left_offset, rect_top_offset),
-                    (progress_width, device.height - (margin + 2)),
+                    (progress_width, rect_bottom_right),
+                ],
+                fill="#ffffff",
+            )
+            draw.rectangle(
+                [
+                    (progress_width - 1, rect_bottom_right - 7),
+                    (progress_width + 3, rect_bottom_right + 3),
                 ],
                 fill="#ffffff",
             )
