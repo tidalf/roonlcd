@@ -97,8 +97,11 @@ def main():
                     "=500", "=%s" % device.height, 1
                 )
                 if image_url != old_image_url:
-                    image = Image.open(requests.get(image_url, stream=True).raw)
-                    old_image_url = image_url
+                    try:
+                      image = Image.open(requests.get(image_url, stream=True, timeout=1).raw)
+                      old_image_url = image_url
+                    except requests.exceptions.Timeout:
+                      pass
                 size = [min(*device.size)] * 2
                 background.paste(
                     image.resize(size, resample=Image.LANCZOS),
@@ -153,8 +156,8 @@ def main():
             )
             draw.rectangle(
                 [
-                    (progress_width - 1, rect_bottom_right - 7),
-                    (progress_width + 3, rect_bottom_right + 3),
+                    (progress_width, rect_bottom_right - 7),
+                    (progress_width+1, rect_bottom_right + 3),
                 ],
                 fill="#ffffff",
             )
