@@ -70,9 +70,10 @@ def main():
     roonapid = get_api()
     zone = ""
     icon_size = 64
-    rect_left_offset = 94
+    time_width = 38
+    rect_left_offset = time_width + margin
     rect_top_offset = 50
-    rect_progress_bottom_right = (device.width - (icon_size + margin), device.height - (margin + 2))
+    rect_progress_bottom_right = (device.width - (icon_size + margin + time_width), device.height - (margin + 2))
     black = Image.new("RGB", device.size, "black")
     background = Image.new("RGB", device.size, "black")
 
@@ -127,11 +128,8 @@ def main():
             draw.text(
                 (margin, 50),
                 font=tiny_font,
-                text="%s / %s"
-                % (
-                    str(datetime.timedelta(seconds=current)),
-                    str(datetime.timedelta(seconds=length)),
-                ),
+                text="%s"
+                % str(datetime.timedelta(seconds=current))
             )
 
             # progressbar
@@ -142,7 +140,7 @@ def main():
                 ]
             )
             progress_pct = (current * 100 / length) / 100
-            rectangle_width = device.width - (icon_size + margin) - rect_left_offset 
+            rectangle_width = device.width - (icon_size + margin + time_width) - rect_left_offset 
             progress_width = rect_left_offset + ((rectangle_width) * (progress_pct))
             draw.rectangle(
                 [
@@ -150,6 +148,12 @@ def main():
                     (progress_width, device.height - (margin + 2)),
                 ],
                 fill="#ffffff",
+            )
+            draw.text(
+                (margin + rectangle_width + margin + time_width , 50),
+                font=tiny_font,
+                text="%s"
+                % str(datetime.timedelta(seconds=length))
             )
 
         device.display(background)
